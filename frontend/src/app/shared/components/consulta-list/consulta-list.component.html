@@ -1,0 +1,73 @@
+<div *ngIf="!loading; else spinner" fxLayout="column" 
+    infinite-scroll
+    [infiniteScrollDisabled]="scrollDisabled"
+    [infiniteScrollDistance]="distance"
+    [infiniteScrollThrottle]="throttle"
+    (scrolled)="onScroll()"
+    [class.container-width]="!scrollDisabled"
+    style="padding-bottom: 16px"
+  >
+  <div fxLayout="row wrap" fxLayoutAlign="space-between none">
+    <mat-checkbox [formControl]="showHistorico">Exibir consultas passadas</mat-checkbox>
+    <mat-form-field appearance="fill">
+      <mat-label>Ordenação</mat-label>
+      <mat-select [formControl]="orderBy">
+        <mat-option selected value="startDate">
+          Horário de Início
+        </mat-option>
+        <mat-option value="psicologoConfirmado">
+          Não confirmadas pelo Psicólogo
+        </mat-option>
+        <mat-option value="pacienteConfirmado">
+          Canceladas pelo Paciente
+        </mat-option>
+        <mat-option value="reagendada">
+          Reagendadas
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="list-container" fxLayout.gt-sm="row wrap" fxLayout="column" fxLayoutAlign="center none">
+    <mat-card *ngFor="let consulta of consultas; let i = index" fxFlex.gt-md="0 1 calc(30%-16px)" fxFlex.gt-sm="0 1 calc(50%-16px)" fxFlex="0 1 calc(100%-16px)" style="width: 85vw;">
+      <mat-card-content style="overflow-wrap: anywhere;">
+        <div fxLayout="column" fxLayoutAlign="space-evenly center">
+          <div style="padding-top: 16px;">
+            <span style="font-weight: 500; font-size: 1.5em;">{{ userType === 'paciente' ? consulta.psicologo.usuario.nome : consulta.paciente.usuario.nome }}</span>
+          </div>
+          <div style="padding-top: 24px" fxLayout="column">
+            <span style="font-size: 1.2em;">Data: <strong [ngClass]="{'red-text': consulta.reagendada}">{{ consulta.startDate | date }}</strong></span>
+            <span style="font-size: 1.2em;">Horário: <span [ngClass]="{'red-text': consulta.reagendada}"><strong>{{ consulta.startDate | date:'HH:mm'	 }}</strong> - <strong>{{ consulta.endDate | date:'HH:mm'	 }}</strong></span></span>
+            <span style="font-size: 1.2em;">Status: <strong>{{ getStatus(consulta) }}</strong></span>
+            <span style="font-size: 1.2em;" *ngIf="userType === 'psicologo'">Idade: <strong>{{ consulta.paciente.usuario.dataNascimento | age }}</strong></span>
+            <span style="font-size: 1.2em;">Preço da Sessão: <strong>{{ consulta.paciente.contrato !== null ? (consulta.paciente.contrato.precoSessao | currency:"BRL") : (consulta.psicologo.precoSessao | currency:"BRL") }}</strong></span>
+          </div>
+          <div *ngIf="!showHistorico.value" fxLayout.gt-sm="row wrap" fxLayout="column" fxLayoutGap="16px" style="margin-top: 16px; gap: 8px;">
+            <ng-container *ngIf="isSessionTime(consulta); else notOnTime">
+              <button  mat-raised-button color="primary" [routerLink]="['/consulta', consulta.id]"><mat-icon class="icon">login</mat-icon> Entrar na Sessão</button>
+            </ng-container>
+            <ng-template #notOnTime>
+              <ng-container *ngIf="userType === 'paciente'; else psicologoButton">
+                <button *ngIf="consulta.pacienteConfirmado" mat-raised-button color="warn" [disabled]="loadingArray[consulta.id]" (click)="cancelConsulta(consulta, i)"><mat-icon class="icon">cancel</mat-icon> Cancelar Sessão</button>
+                <button *ngIf="!consulta.pacienteConfirmado" mat-raised-button color="primary" [disabled]="loadingArray[consulta.id]" (click)="confirmConsulta(consulta, i)"><mat-icon class="icon">check</mat-icon> Confirmar Sessão</button>
+              </ng-container>
+              <ng-template #psicologoButton>
+                <button *ngIf="consulta.psicologoConfirmado" mat-raised-button color="warn" [disabled]="loadingArray[consulta.id]" (click)="cancelConsulta(consulta, i)"><mat-icon class="icon">cancel</mat-icon> Cancelar Sessão</button>
+                <button *ngIf="!consulta.psicologoConfirmado" mat-raised-button color="primary" [disabled]="loadingArray[consulta.id]" (click)="confirmConsulta(consulta, i)"><mat-icon class="icon">check</mat-icon> Confirmar Sessão</button>
+              </ng-template>
+              <button mat-raised-button color="primary" [disabled]="loadingArray[consulta.id]" (click)="openAgendamentoModal(consulta, i)"><mat-icon class="icon">date_range</mat-icon> Reagendar Sessão</button>
+            </ng-template>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <div *ngIf="consultas.length === 0">
+      <h3>Nenhuma consulta foi encontrada.</h3>
+    </div>
+  </div>
+</div>
+
+<ng-template #spinner>
+  <div>
+    <h2>Carregando...</h2>
+  </div>
+</ng-template>

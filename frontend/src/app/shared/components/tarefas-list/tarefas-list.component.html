@@ -1,0 +1,42 @@
+<div *ngIf="!loading; else spinner" fxLayout="column" 
+    infinite-scroll
+    [infiniteScrollDisabled]="scrollDisabled"
+    [infiniteScrollDistance]="distance"
+    [infiniteScrollThrottle]="throttle"
+    (scrolled)="onScroll()"
+    [class.container-width]="!scrollDisabled"
+    style="padding-bottom: 16px"
+  >
+  <div class="list-container" fxLayout.gt-sm="row wrap" fxLayout="column" fxLayoutAlign="center none">
+    <mat-card *ngFor="let tarefa of tarefas; let i = index" fxFlex.gt-md="0 1 calc(30%-16px)" fxFlex.gt-sm="0 1 calc(50%-16px)" fxFlex="0 1 calc(100%-16px)" style="width: 85vw;">
+      <mat-card-content style="overflow-wrap: anywhere;">
+        <div fxLayout="column" fxLayoutAlign="space-evenly center">
+          <div style="padding-top: 16px;">
+            <span style="font-weight: 500; font-size: 1.5em;">{{ tarefa.nome }}</span>
+          </div>
+          <div style="padding-top: 24px; gap: 8px;" fxLayout="column">
+            <span style="font-size: 1.2em;">Realizada: <span [ngClass]="{'red-text': !tarefa.realizada}"><strong>{{ tarefa.realizada ? 'Sim' : 'Não' }}</strong></span></span>
+            <span style="font-size: 1.2em;">{{ tarefa.descricao }}</span>
+          </div>
+          <div fxLayout.gt-sm="row wrap" fxLayout="column" fxLayoutGap="16px" style="margin-top: 16px; gap: 8px;">
+            <ng-container *ngIf="userType === 'paciente'; else psicologoButton">
+              <button (click)="changeTarefaStatus(tarefa, i)" [disabled]="loadingArray[i]" mat-raised-button [color]="tarefa.realizada ? 'warn' : 'primary'"><mat-icon class="icon">{{ tarefa.realizada ? 'cancel' : 'check' }}</mat-icon> {{ tarefa.realizada ? 'Tarefa não realizada' : 'Realizar tarefa' }}</button>
+            </ng-container>
+            <ng-template #psicologoButton>
+              <button (click)="deleteTarefa(tarefa, i)" [disabled]="loadingArray[i]" mat-raised-button color="warn"><mat-icon class="icon">cancel</mat-icon> Deletar Tarefa</button>
+            </ng-template>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <div *ngIf="tarefas.length === 0">
+      <h3>Nenhuma tarefa foi encontrada.</h3>
+    </div>
+  </div>
+</div>
+
+<ng-template #spinner>
+  <div>
+    <h2>Carregando...</h2>
+  </div>
+</ng-template>

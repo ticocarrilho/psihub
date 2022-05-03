@@ -1,0 +1,20 @@
+<mat-tab-group>
+  <mat-tab label="Consultas">
+    <app-consulta-list [scrollDisabled]="true"></app-consulta-list>
+  </mat-tab>
+
+  <mat-tab label="Tarefas">
+    <div style="margin-bottom: 16px;">
+      <button *ngIf="userType === 'psicologo'" mat-raised-button color="primary" (click)="openTarefaModal()"><mat-icon class="icon">task</mat-icon>Criar Tarefa</button>
+    </div>
+    <app-tarefas-list [scrollDisabled]="userType === 'paciente'" [refresh]="tarefasRefresh"></app-tarefas-list>
+  </mat-tab>
+
+  <mat-tab *ngIf="userType === 'psicologo'" label="Anotações">
+    <div style="margin-bottom: 16px;">
+      <button mat-raised-button color="primary" (click)="openAnotacaoModal()"><mat-icon class="icon">description</mat-icon>Criar Anotações</button>
+    </div>
+    <app-anotacoes-list [userId]="userId" [refresh]="anotacoesRefresh"></app-anotacoes-list>
+  </mat-tab>
+
+</mat-tab-group>

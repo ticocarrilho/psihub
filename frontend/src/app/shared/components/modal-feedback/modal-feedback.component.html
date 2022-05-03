@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>Criar Feedback sobre a sessão</h1>
+<div mat-dialog-content style="padding-bottom: 8px;" [formGroup]="feedbackForm">
+  <h3 *ngIf="loading; else body">Carregando...</h3>
+  <ng-template #body>
+
+  <mat-form-field appearance="fill" style="width: 100%;">
+    <mat-label>Descrição</mat-label>
+    <textarea matInput formControlName="descricao" required></textarea>
+    <mat-error *ngIf="feedbackForm.get('descricao')?.hasError('required')">
+      O campo de Descrição é <strong>obrigatório</strong>
+    </mat-error>
+  </mat-form-field>
+  </ng-template>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [disabled]="feedbackForm.status !== 'VALID' || loading" (click)="submit()">Criar Feedback</button>
+</div>

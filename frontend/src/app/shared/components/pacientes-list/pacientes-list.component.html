@@ -1,0 +1,36 @@
+<h2 style="text-align: center;">Pacientes com Contrato</h2>
+<div class="list-container" *ngIf="!loading; else spinner" fxLayout.gt-sm="row wrap" fxLayout="column" fxLayoutAlign="center none"
+    infinite-scroll
+    [infiniteScrollDistance]="distance"
+    [infiniteScrollThrottle]="throttle"
+    (scrolled)="onScroll()"
+  >
+  <mat-card *ngFor="let paciente of pacientes" fxFlex.gt-md="0 1 calc(30%-16px)" fxFlex.gt-sm="0 1 calc(50%-16px)" fxFlex="0 1 calc(100%-16px)" style="width: 85vw;">
+    <mat-card-content fxLayout="column" fxLayoutAlign=" center" style="overflow-wrap: anywhere;">
+      <div>
+        <div style="padding-top: 16px;" fxLayoutAlign="space-evenly none">
+          <span style="font-weight: 500; font-size: 1.5em;">{{ paciente.usuario.nome }}</span>
+        </div>
+        <div style="padding-top: 24px" fxLayout="column">
+          <span style="font-size: 1.2em;">Telefone: <strong>{{ paciente.usuario.telefone }}</strong></span>
+          <span style="font-size: 1.2em;">E-mail: <strong>{{ paciente.usuario.email }}</strong></span>
+          <span style="font-size: 1.2em;">Idade: <strong>{{ paciente.usuario.dataNascimento | age }}</strong></span>
+          <span style="font-size: 1.2em;">Período do Contrato: <strong>{{ paciente.contrato.inicioContrato | date:'dd/MM/YYYY'	 }}</strong> - <strong>{{ paciente.contrato.finalContrato | date:'dd/MM/YYYY'	 }}</strong></span>
+          <span style="font-size: 1.2em;">Preço por Sessão do Contrato: <strong>{{ paciente.contrato.precoSessao | currency:"BRL" }}</strong></span>
+        </div>
+      </div>
+      <div style="margin-top: 16px;" fxLayout="column" fxLayoutGap="8px">
+        <button mat-raised-button color="primary" [routerLink]="['/paciente/info', paciente.id]">Visualizar Informações</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <div *ngIf="pacientes.length === 0">
+    <h3>Não há nenhum paciente com contrato.</h3>
+  </div>
+</div>
+
+<ng-template #spinner>
+  <div>
+    <h2>Carregando...</h2>
+  </div>
+</ng-template>

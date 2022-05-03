@@ -1,0 +1,24 @@
+mat-card {
+  min-width: 80vw;
+  @media (min-width: 992px) { 
+    min-width: 50vw;
+  }
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-card-title {
+  margin-bottom: 24px;
+}
+
+mat-slide-toggle {
+  margin-bottom: 16px;
+}
+
+.form-container {
+  @media screen and (min-width: 960px) {
+    gap: 0px 16px;
+  }
+}

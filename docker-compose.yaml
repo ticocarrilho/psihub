@@ -1,0 +1,24 @@
+version: "3.8"
+services:
+  mysql:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASS_PROD}
+    ports: 
+      - '3306'
+
+  psihub:
+    image: ticocarrilho/psihub:v3
+    restart: always
+    environment:
+      DB_NAME: ${DB_NAME_PROD}
+      DB_USER: ${DB_USER_PROD}
+      DB_PASS: ${DB_PASS_PROD}
+      DB_HOST: ${DB_HOST_PROD}
+      JWT_SECRET: ${JWT_SECRET_PROD}
+      NODE_ENV: 'production'
+    depends_on:
+      - mysql
+    ports:
+      - '3200:3200'

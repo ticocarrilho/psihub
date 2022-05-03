@@ -1,0 +1,29 @@
+<div *ngIf="!loading; else spinner" fxLayout="column" 
+    infinite-scroll
+    [infiniteScrollDistance]="distance"
+    [infiniteScrollThrottle]="throttle"
+    (scrolled)="onScroll()"
+    style="padding-bottom: 16px"
+  >
+  <div class="list-container" fxLayout.gt-sm="row wrap" fxLayout="column" fxLayoutAlign="center none">
+    <mat-card *ngFor="let feedback of feedbacks; let i = index" fxFlex.gt-md="0 1 calc(30%-16px)" fxFlex.gt-sm="0 1 calc(50%-16px)" fxFlex="0 1 calc(100%-16px)">
+      <mat-card-content style="overflow-wrap: anywhere;">
+        <div fxLayout="column" fxLayoutAlign="space-evenly center">
+          <div style="gap: 8px;" fxLayout="column">
+            <span style="font-size: 1.2em;">Data do Feedback: <strong>{{ feedback.createdAt | date:'dd/MM/YYYY' }}</strong></span>
+            <span style="font-size: 1.2em;">{{ feedback.descricao }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <div *ngIf="feedbacks.length === 0">
+      <h3>Nenhum Feedback foi encontrado.</h3>
+    </div>
+  </div>
+</div>
+
+<ng-template #spinner>
+  <div>
+    <h2>Carregando...</h2>
+  </div>
+</ng-template>

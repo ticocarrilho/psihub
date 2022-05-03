@@ -1,0 +1,46 @@
+<button mat-raised-button color="primary" (click)="createFormacao()" [disabled]="isAddDisabled()"><mat-icon class="icon">add</mat-icon> Adicionar Formação</button>
+
+<div [formGroup]="fg">
+  <mat-card class="row" formArrayName="formacoes" style="margin-top: 16px;" *ngFor="let formacao of getFormacoesFormArray().controls; let i = index">
+    <div fxLayout="row" fxLayoutAlign="end none" >
+      <button mat-raised-button color="warn" (click)="removeFormacao(i)" style="margin-bottom: 16px;"><mat-icon class="icon">delete</mat-icon> Remover Formação</button>
+    </div>
+    <div [formGroupName]="i">
+      <div fxLayout.gt-sm="row wrap" fxLayout="column" class="form-container">
+        <mat-form-field appearance="fill" fxFlex.gt-sm="calc(50%-16px)">
+          <mat-label>Título</mat-label>
+          <input matInput type="text" formControlName="titulo" required>
+          <mat-error *ngIf="formacao.get('titulo')?.hasError('required')">
+            O campo de Título é <strong>obrigatório</strong>
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill" fxFlex.gt-sm="calc(50%-16px)">
+          <mat-label>Universidade</mat-label>
+          <input matInput type="text" formControlName="universidade" required>
+          <mat-error *ngIf="formacao.get('universidade')?.hasError('required')">
+            O campo de Universidade é <strong>obrigatório</strong>
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill" fxFlex.gt-sm="calc(50%-16px)">
+          <mat-label>Curso</mat-label>
+          <input matInput type="text" formControlName="curso" required>
+          <mat-error *ngIf="formacao.get('curso')?.hasError('required')">
+            O campo de Curso é <strong>obrigatório</strong>
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill" style="cursor: pointer;" (click)="anoPicker.open()" fxFlex.gt-sm="calc(50%-16px)">
+          <mat-label>Ano de Formação</mat-label>
+          <input matInput [matDatepicker]="anoPicker" readonly [max]="maxDate" formControlName="anoFormacao" required>
+          <mat-datepicker-toggle matSuffix [for]="anoPicker"></mat-datepicker-toggle>
+          <mat-datepicker #anoPicker disabled="false" startView="multi-year" (yearSelected)="chosenYearHandler($event, anoPicker, i)"></mat-datepicker>
+          <mat-error *ngIf="formacao.get('anoFormacao')?.hasError('required')">
+            O campo de Ano de Formação é <strong>obrigatório</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+  </mat-card>
+</div>

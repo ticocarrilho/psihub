@@ -1,0 +1,2 @@
+<button *ngIf="!hasContrato && userType === 'psicologo'" mat-raised-button color="primary" (click)="openContratoModal()"><mat-icon class="icon">attach_money</mat-icon> Criar Contrato com o Paciente</button>
+<app-jitsi [uuid]="sessionUUID" [paciente]="paciente" [psicologo]="psicologo"></app-jitsi>

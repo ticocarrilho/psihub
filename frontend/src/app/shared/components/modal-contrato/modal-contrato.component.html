@@ -1,0 +1,41 @@
+<h1 mat-dialog-title>Criar contrato com {{ modalData.paciente.usuario.nome }}</h1>
+<div mat-dialog-content style="padding-bottom: 8px;" [formGroup]="contratoForm">
+  <mat-card>
+    <h3 *ngIf="loading; else calendar">Carregando...</h3>
+    <ng-template #calendar>
+
+    <mat-form-field appearance="fill" style="width: 100%; cursor: pointer;" (click)="picker.open()">
+      <mat-label>Selecione o período do contrato</mat-label>
+      <mat-date-range-input [dateFilter]="dateFilter" [rangePicker]="picker" [min]="minDate">
+        <input matStartDate placeholder="Início" formControlName="inicioContrato">
+        <input matEndDate placeholder="Final" formControlName="finalContrato">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+
+      <mat-error *ngIf="contratoForm.get('inicioContrato')?.hasError('required') || contratoForm.get('finalContrato')?.hasError('required')">
+        O campo de Período do Contrato é <strong>obrigatório</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" style="margin-top: 16px; width: 100%;">
+      <mat-label>Preço por Sessão</mat-label>
+      <input matInput currencyMask formControlName="precoSessao" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" required/>
+      <mat-error *ngIf="contratoForm.get('precoSessao')?.hasError('min')">
+        O preço minímo por sessão é <strong>R$ 30,00</strong>
+      </mat-error>
+      <mat-error *ngIf="!contratoForm.get('precoSessao')?.hasError('min') && contratoForm.get('precoSessao')?.hasError('required')">
+        O campo de Preço por Sessão é <strong>obrigatório</strong>
+      </mat-error>
+    </mat-form-field>
+
+
+    <mat-button-toggle-group fxLayout="row wrap" style="margin-top: 16px;" formControlName="hour">
+      <mat-button-toggle style="width:100%; border-top: solid 1px rgba(0,0,0,.12);" fxFlex="calc(50%)" fxFlex.gt-sm="calc(20%)" *ngFor="let horario of horarios" [value]="horario">{{ horario }}</mat-button-toggle>
+    </mat-button-toggle-group>
+    </ng-template>
+  </mat-card>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [disabled]="contratoForm.status !== 'VALID' || loading" (click)="submit()">Criar Contrato</button>
+</div>

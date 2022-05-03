@@ -1,0 +1,28 @@
+.content {
+  padding: 4em 2em 2em 2em;
+  height: 100%;
+  overflow: auto;
+}
+
+.icon {
+  margin-right: 0.5em;
+}
+
+mat-sidenav {
+  width: 50vw;
+}
+
+.text-toolbar {
+  color: #fff;
+  text-decoration: none;
+  line-height: 36px;
+  padding: 0.5em 0.5em;
+  border-radius: 4px;
+  &:hover {
+    background: rgba(0,0,0,.4);
+  }
+}
+
+.sidenav-container {
+  height: initial !important; 
+}

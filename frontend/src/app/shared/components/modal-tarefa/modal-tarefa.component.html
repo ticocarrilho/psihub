@@ -1,0 +1,28 @@
+<h1 mat-dialog-title>Criar tarefa para {{ modalData.paciente.usuario.nome }}</h1>
+<div mat-dialog-content style="padding-bottom: 8px;" [formGroup]="tarefasForm">
+  <mat-card>
+    <h3 *ngIf="loading; else body">Carregando...</h3>
+    <ng-template #body>
+
+    <mat-form-field appearance="fill" style="margin-top: 16px; width: 100%;">
+      <mat-label>Título</mat-label>
+      <input matInput formControlName="titulo" type="text" required/>
+      <mat-error *ngIf="tarefasForm.get('titulo')?.hasError('required')">
+        O campo de Título é <strong>obrigatório</strong>
+      </mat-error>
+    </mat-form-field>
+
+
+    <mat-form-field appearance="fill" style="width: 100%;">
+      <mat-label>Descrição</mat-label>
+      <textarea matInput formControlName="descricao" required></textarea>
+      <mat-error *ngIf="tarefasForm.get('descricao')?.hasError('required')">
+        O campo de Descrição é <strong>obrigatório</strong>
+      </mat-error>
+    </mat-form-field>
+    </ng-template>
+  </mat-card>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [disabled]="tarefasForm.status !== 'VALID' || loading" (click)="submit()">Criar Tarefa</button>
+</div>

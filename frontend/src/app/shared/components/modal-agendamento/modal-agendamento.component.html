@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Agenda de {{ modalData.psicologoNome }}</h1>
+<div mat-dialog-content style="padding-bottom: 8px;" [formGroup]="agendamentoForm">
+  <mat-card>
+    <h3 *ngIf="loading; else calendar">Carregando.</h3>
+    <ng-template #calendar>
+      <mat-calendar [startAt]="agendamentoForm.get('date')?.value" [minDate]="minDate" [dateFilter]="dateFilter" [selected]="agendamentoForm.get('date')?.value" (selectedChange)="selectedDateChange($event)"></mat-calendar>
+    </ng-template>
+  </mat-card>
+  <mat-button-toggle-group *ngIf="!loading" style="margin-top: 16px;" formControlName="hour">
+    <mat-button-toggle style="width:100%; border-top: solid 1px rgba(0,0,0,.12);" fxFlex="calc(50%)" fxFlex.gt-sm="calc(20%)" *ngFor="let horario of horarios" [value]="horario">{{ horario }}</mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [disabled]="agendamentoForm.status !== 'VALID' || loading" (click)="submit()">{{ this.modalData.consulta ? 'Reagendar Consulta' : 'Agendar Consulta' }}</button>
+</div>

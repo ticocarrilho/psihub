@@ -1,0 +1,98 @@
+<mat-toolbar color="primary" class="mat-elevation-z6">
+  <mat-icon class="icon">event_seat</mat-icon>
+  <span>PsiHub</span>
+  <div fxFlex></div>
+  <div fxShow="true" fxHide.lt-md="true">
+    <a class="text-toolbar" routerLink="/psicologos">
+      <span>Início</span>
+    </a>
+
+    <ng-container *ngIf="isLoggedIn; else loginNav">
+      <ng-container *ngIf="userType === 'paciente'; else psicologoNav">
+        <a class="text-toolbar" routerLink="/paciente/consultas">
+          <span>Consultas</span>
+        </a>
+        <a class="text-toolbar" routerLink="/paciente/tarefas">
+          <span>Tarefas</span>
+        </a>
+      </ng-container>
+      <ng-template #psicologoNav>
+        <a class="text-toolbar" routerLink="/psicologo/pacientes">
+          <span>Pacientes</span>
+        </a>
+        <a class="text-toolbar" routerLink="/psicologo/feedbacks">
+          <span>Feedbacks</span>
+        </a>
+      </ng-template>
+      <a class="text-toolbar" style="cursor: pointer;" (click)="logout()">
+        <span>Sair</span>
+      </a>
+    </ng-container>
+
+    <ng-template #loginNav>
+      <a class="text-toolbar" routerLink="/login">
+        <span>Login</span>
+      </a>
+      <a class="text-toolbar" routerLink="/signup">
+        <span>Cadastro</span>
+      </a>
+    </ng-template>
+    
+  </div>
+
+  <div fxShow="true" fxHide.gt-sm="true">
+    <button mat-icon-button (click)="sidenav.toggle()">
+      <mat-icon>reorder</mat-icon>
+    </button>
+  </div>
+</mat-toolbar>
+
+<mat-sidenav-container fxFlexFill style="height: initial;" class="sidenav-container">
+
+  <mat-sidenav position="end" #sidenav fxLayout="column">
+    <div fxLayout="column">
+      <a routerLink="/psicologos" mat-button>
+        <span>Início</span>
+      </a>
+
+      <ng-container *ngIf="isLoggedIn; else loginNavMobile">
+        <ng-container *ngIf="userType === 'paciente'; else psicologoNavMobile">
+          <a routerLink="/paciente/consultas" mat-button>
+            <span>Consultas</span>
+          </a>
+          <a routerLink="/paciente/tarefas" mat-button>
+            <span>Tarefas</span>
+          </a>
+        </ng-container>
+        <ng-template #psicologoNavMobile>
+          <a routerLink="/psicologo/pacientes" mat-button>
+            <span>Pacientes</span>
+          </a>
+          <a routerLink="/psicologo/feedbacks" mat-button>
+            <span>Feedbacks</span>
+          </a>
+        </ng-template>
+        <a style="cursor: pointer;" (click)="logout()" mat-button>
+          <span>Sair</span>
+        </a>
+      </ng-container>
+
+      <ng-template #loginNavMobile>
+        <a routerLink="/login" mat-button>
+          <span>Login</span>
+        </a>
+        <a routerLink="/signup" mat-button>
+          <span>Cadastro</span>
+        </a>
+      </ng-template>
+      
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content fxFlexFill>
+    <div class="content" fxLayoutAlign="center start">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

@@ -1,0 +1,131 @@
+<mat-card>
+  <mat-card-title>
+    Cadastro
+  </mat-card-title>
+
+  <mat-card-content [formGroup]="signupForm" fxLayout="column" fxLayoutAlign="space-around">
+    <mat-slide-toggle [formControl]="isPsicologo">Sou Psicólogo</mat-slide-toggle>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Nome</mat-label>
+      <input matInput type="text" formControlName="nome" required>
+      <mat-error *ngIf="signupForm.get('nome')?.hasError('required')">
+        O campo de Nome é <strong>obrigatório</strong>
+      </mat-error>
+    </mat-form-field>
+    
+    <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="16px">
+      <mat-form-field appearance="fill" style="cursor: pointer;" (click)="picker.open()">
+        <mat-label>Data de Nascimento</mat-label>
+        <input matInput [matDatepicker]="picker" [max]="maxDate" readonly formControlName="dataNascimento" required>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker disabled="false"></mat-datepicker>
+        <mat-error *ngIf="signupForm.get('dataNascimento')?.hasError('required')">
+          O campo de Data de Nascimento é <strong>obrigatório</strong>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Telefone</mat-label>
+        <input matInput type="text" formControlName="telefone" required trim>
+        <mat-error *ngIf="signupForm.get('telefone')?.hasError('required')">
+          O campo de Telefone é <strong>obrigatório</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <mat-form-field appearance="fill">
+      <mat-label>E-mail</mat-label>
+      <input matInput type="email" formControlName="email" required trim>
+      <mat-error *ngIf="signupForm.get('email')?.hasError('email') && !signupForm.get('email')?.hasError('required')">
+        O E-mail não é um endereço <strong>válido</strong>
+      </mat-error>
+      <mat-error *ngIf="signupForm.get('email')?.hasError('required')">
+        O campo de E-mail é <strong>obrigatório</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <ng-template [ngIf]="isPsicologo.value">
+      <div fxLayout.gt-sm="row wrap" fxLayout="column" class="form-container">
+        <mat-form-field appearance="fill" style="cursor: pointer;" (click)="fileInput.openFilePicker()">
+          <ngx-mat-file-input #fileInput formControlName="imagem" [placeholder]="'Escolha uma foto'" [multiple]="false" [accept]="'image/jpeg'" color="primary">
+          </ngx-mat-file-input>
+          <mat-error *ngIf="signupForm.get('imagem')?.hasError('required')">
+            O campo de Foto é <strong>obrigatório</strong>
+          </mat-error>
+          <mat-error *ngIf="!signupForm.get('imagem')?.hasError('required') && signupForm.get('imagem')?.hasError('maxSize')">
+            O tamanho máximo da foto é de <strong>3 MB</strong>
+          </mat-error>
+        </mat-form-field>
+        <div fxFlex="100%" fxLayout="column" fxLayoutAlign=" center" >
+          <mat-label style="margin-left: -22px;">Horário de Atendimento</mat-label>
+          <div fxLayout="row wrap">
+            <ngx-mat-timepicker
+            formControlName="comecoAtendimento"
+            [showSpinners]="true">
+            </ngx-mat-timepicker>
+            <ngx-mat-timepicker
+              formControlName="finalAtendimento"
+              [showSpinners]="true">
+            </ngx-mat-timepicker>
+          </div>
+          <mat-error *ngIf="signupForm.get('comecoAtendimento')?.hasError('required')">
+            O campo de Horário Inicial de Atendimento é <strong>obrigatório</strong>
+          </mat-error>
+        </div>
+
+        <mat-form-field appearance="fill" fxFlex.gt-sm="calc(50%-16px)">
+          <mat-label>CRP</mat-label>
+          <input matInput type="text" formControlName="crp" required trim>
+          <mat-error *ngIf="signupForm.get('crp')?.hasError('required')">
+            O campo de CRP é <strong>obrigatório</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" fxFlex.gt-sm="calc(50%-16px)">
+          <mat-label>Estado</mat-label>
+          <mat-select formControlName="estado">
+            <mat-option *ngFor="let estado of estados" [value]="estado" required>
+              {{ estado }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="signupForm.get('estado')?.hasError('required')">
+            O campo de Estado é <strong>obrigatório</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <app-formacoes [fg]="signupForm"></app-formacoes>
+
+      <mat-form-field appearance="fill" style="margin-top: 16px;">
+        <mat-label>Preço por Sessão</mat-label>
+        <input matInput currencyMask formControlName="precoSessao" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" required/>
+        <mat-error *ngIf="!signupForm.get('precoSessao')?.hasError('required') && signupForm.get('precoSessao')?.hasError('min')">
+          O preço minímo por sessão é <strong>R$ 30,00</strong>
+        </mat-error>
+        <mat-error *ngIf="signupForm.get('precoSessao')?.hasError('required')">
+          O campo de Preço por Sessão é <strong>obrigatório</strong>
+        </mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="fill">
+        <mat-label>Biografia</mat-label>
+        <textarea matInput formControlName="biografia" required></textarea>
+        <mat-error *ngIf="signupForm.get('biografia')?.hasError('required')">
+          O campo de Biografia é <strong>obrigatório</strong>
+        </mat-error>
+      </mat-form-field>
+    </ng-template>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Senha</mat-label>
+      <input matInput type="password" formControlName="senha" required>
+      <mat-error *ngIf="signupForm.get('senha')?.hasError('required')">
+        O campo de Senha é <strong>obrigatório</strong>
+      </mat-error>
+    </mat-form-field>
+
+  </mat-card-content>
+  <div fxLayout="row" fxLayoutAlign="end none">
+    <button mat-raised-button color="primary" [disabled]="loading || signupForm.status === 'INVALID'" (click)="submit()">Criar Conta</button>
+  </div>
+</mat-card>

@@ -1,0 +1,36 @@
+<div *ngIf="!loading; else spinner" fxLayout="column" 
+    infinite-scroll
+    [infiniteScrollDisabled]="scrollDisabled"
+    [infiniteScrollDistance]="distance"
+    [infiniteScrollThrottle]="throttle"
+    (scrolled)="onScroll()"
+    [class.container-width]="!scrollDisabled"
+    style="padding-bottom: 16px"
+  >
+  <div class="list-container" fxLayout.gt-sm="row wrap" fxLayout="column" fxLayoutAlign="center none">
+    <mat-card *ngFor="let anotacao of anotacoes; let i = index" fxFlex.gt-md="0 1 calc(30%-16px)" fxFlex.gt-sm="0 1 calc(50%-16px)" fxFlex="0 1 calc(100%-16px)" style="width: 85vw;">
+      <mat-card-content style="overflow-wrap: anywhere;">
+        <div fxLayout="column" fxLayoutAlign="space-evenly center">
+          <div style="padding-top: 16px;">
+            <span style="font-weight: 500; font-size: 1.5em;">{{ anotacao.titulo }}</span>
+          </div>
+          <div style="padding-top: 24px; gap: 8px;" fxLayout="column">
+            <span style="font-size: 1.2em;">{{ anotacao.descricao }}</span>
+          </div>
+          <div style="margin-top: 16px;">
+            <button (click)="deleteAnotacao(anotacao, i)" [disabled]="loadingArray[i]" mat-raised-button color="warn"><mat-icon class="icon">cancel</mat-icon> Deletar Anotação</button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <div *ngIf="anotacoes.length === 0">
+      <h3>Nenhuma anotação foi encontrada.</h3>
+    </div>
+  </div>
+</div>
+
+<ng-template #spinner>
+  <div>
+    <h2>Carregando...</h2>
+  </div>
+</ng-template>
